@@ -36,6 +36,8 @@ const MessageInput = (props) => {
     const [message, setMessage] = useState("");
 
     const sendMessageAndClear = () => {
+        if (message === "") return;
+
         if (props.onEnter) {
             props.onEnter(message);
         }
@@ -50,7 +52,7 @@ const MessageInput = (props) => {
                    onChange={e=>setMessage(e.target.value)}
             />
             <SendButton onClick={() => sendMessageAndClear()}>
-                <img src={sendIcon} width={"auto"} height={24}/>
+                <img src={sendIcon} width={"auto"} height={24} style={{"vertical-align": "middle"}}/>
             </SendButton>
 
         </InputContainer>

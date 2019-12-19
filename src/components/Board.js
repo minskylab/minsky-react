@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import styled from "styled-components";
 import {chatBotAvatar} from "./ChatBotAvatar";
 import Separator from "./Separator";
-import Message from "./Message";
+
 import MessageInput from "./MessageInput";
 
 const Base = styled.div`
@@ -15,9 +15,9 @@ const Base = styled.div`
   //border: solid red 0.05rem;
   overflow: hidden;
   -webkit-box-shadow: 0px 0px 17px 0px rgba(0,0,0,0.3);
-    -moz-box-shadow: 0px 0px 17px 0px rgba(0,0,0,0.3);
-    box-shadow: 0px 0px 17px 0px rgba(0,0,0,0.3);
-  
+  -moz-box-shadow: 0px 0px 17px 0px rgba(0,0,0,0.3);
+  box-shadow: 0px 0px 17px 0px rgba(0,0,0,0.3); 
+  height: 30rem;
 `;
 
 const Header = styled.div`
@@ -80,11 +80,27 @@ const BotTagLine = styled.h5`
 `;
 
 const Body = styled.div`
-padding: 1rem 1.5rem;
-//width: 100%;
+  padding: 1rem 1.5rem;
+  //width: 100%;
+  margin-top: auto;
+  //margin-bottom: auto;
+  overflow: scroll;
+  position: relative;
 `;
 
 const Board = (props) => {
+    const bodyRef = useRef();
+
+    const onNewMessage = (message) => {
+        if (props) {
+            props.onNewMessage(message);
+        }
+        // console.log(bodyRef.current);
+        // console.log(bodyRef.current.offsetTop);
+        // bodyRef.current.scrollTop = bodyRef.current.offsetTop;
+        bodyRef.current.scrollIntoView({behavior: "smooth"});
+    };
+
     return (
         <Base>
             <Header>
@@ -102,9 +118,10 @@ const Board = (props) => {
             <Separator/>
             <Body>
                 {props.messages}
+                <div style={{ float:"left", clear: "both" }} ref={bodyRef}/>
             </Body>
             <Separator/>
-            <MessageInput onEnter={props.onNewMessage}/>
+            <MessageInput onEnter={onNewMessage}/>
         </Base>
     );
 };
