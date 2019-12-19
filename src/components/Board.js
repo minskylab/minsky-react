@@ -84,7 +84,7 @@ padding: 1rem 1.5rem;
 //width: 100%;
 `;
 
-const Board = () => {
+const Board = (props) => {
     return (
         <Base>
             <Header>
@@ -101,16 +101,10 @@ const Board = () => {
             </Header>
             <Separator/>
             <Body>
-                <Message text={"Hello World"} bot/>
-                <Message text={"I'm Bregy"} continue/>
-                <Message text={"I'm Bregy"} continue from={"none"}/>
-                <Message text={"I'm Bregy"} continue from={"none"}/>
-                <Message text={"I'm Bregy"} from={"top"}/>
-                <Message text={"Hi Bregy, how are you?!"} bot continue/>
-                <Message text={"Hi Bregy, how are you?!"} bot from={"top"} />
+                {props.messages}
             </Body>
             <Separator/>
-            <MessageInput/>
+            <MessageInput onEnter={props.onNewMessage}/>
         </Base>
     );
 };

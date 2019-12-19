@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import sendIcon from '../icons/arrow-forward-outline.svg';
+
 
 const InputContainer = styled.div`
   width: 90%;
@@ -24,15 +25,34 @@ const Input = styled.input`
 `;
 
 const SendButton = styled.div`
+    :hover {
+      cursor: pointer;
+    }
   //width: 2rem;
   //height: 2rem;
 `;
 
-const MessageInput = () => {
+const MessageInput = (props) => {
+    const [message, setMessage] = useState("");
+
+    const sendMessageAndClear = () => {
+        if (props.onEnter) {
+            props.onEnter(message);
+        }
+        setMessage("")
+    };
+
     return (
         <InputContainer>
-            <Input placeholder={"Type your Message here"}/>
-            <img src={sendIcon} width={"auto"} height={24} />
+            <Input placeholder={"Type your Message here"}
+                   onKeyPress={(e)=>e.key==="Enter"?sendMessageAndClear():null}
+                   value={message}
+                   onChange={e=>setMessage(e.target.value)}
+            />
+            <SendButton onClick={() => sendMessageAndClear()}>
+                <img src={sendIcon} width={"auto"} height={24}/>
+            </SendButton>
+
         </InputContainer>
     );
 };
