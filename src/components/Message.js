@@ -21,11 +21,11 @@ const MessageBody = styled.div`
   max-width: 80%;
   padding: 0.5rem 0.8rem;
   
-   margin-top: ${props=>props.continue? "0.2rem" : "0.6rem"};
+  margin-top: ${props=>props.continue? "0.2rem" : "0.6rem"};
   //margin-bottom: ${props=>props.continue? "0.2rem" : "0.6rem"};;
-  
+  min-width: 0;
   display: flex;
-  
+  flex-wrap: wrap;
   color: ${props=> props.bot?"#1d1d2d":"#ffffff"};
   //color: ${props=> props.bot?"#1d1d2d":"#1d1d2d"};
   ${props=>{

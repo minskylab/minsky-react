@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Board from "./components/Board";
 import Message from "./components/Message";
+import Options from "./components/Options";
 
 const CenteredComponentX = styled.div`
   width: 100%;
@@ -18,46 +19,83 @@ const CenteredComponentY = styled.div`
   justify-content: center;
   `;
 
-const  App = () => {
-    const [messages, setMessages] = useState([]);
+const App = () => {
+    const [content, setContent] = useState([]);
+
+    const [inputBlocked, setInputBlocked] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
 
     useEffect(() => {
-        const m = messages[messages.length-1];
+        const m = content[content.length-1];
         if (m) {
             const isABotMessage = m.props.bot;
             if (!isABotMessage) {
-                getResponseByMessage(m.text);
+                getResponseByMessage(m.props.text);
             }
         }
-    }, [messages]);
+    }, [content]);
 
 
     const getResponseByMessage = (message) => {
         const rnd = Math.random();
         const totalTimeout = rnd*700 + 500;
-        // console.log(totalTimeout);
 
+        setInputBlocked(true);
+        // Emulating request
         setTimeout(() => {
-            newMessage("42", true)
+            if (message === "?") {
+                newOptionsChoose([{text: "Hello"}, {text: "World"}]);
+            }else{
+                newMessage("42", true);
+            }
+            setInputBlocked(false);
+
         }, totalTimeout)
+
     };
 
+    const onToggleCollapse = () => {
+        if (collapsed) {
+            setCollapsed(false);
+        }else{
+            setCollapsed(true);
+        }
+    };
 
     const newMessage = (message, botResponse= false) => {
         console.log(message);
-        const m = messages[messages.length-1];
+        const m = content[content.length-1];
         const cont = m?!m.props.bot:true;
 
-        setMessages([
-            ...messages,
+        setContent([
+            ...content,
             <Message text={message} continue={cont} bot={botResponse}/>
+        ]);
+    };
+
+    const onOptionSelected = (opt) => {
+        newMessage(opt.text);
+    };
+
+    const newOptionsChoose = (options) => {
+        console.log(options);
+        setContent([
+            ...content,
+            <Options options={options} onOptionSelected={onOptionSelected} bot/>
         ]);
     };
 
     return (
         <CenteredComponentY>
            <CenteredComponentX>
-               <Board messages={messages} onNewMessage={newMessage}/>
+               <Board
+                   content={content}
+                   inputBlocked={inputBlocked}
+                   onNewMessage={newMessage}
+                   collapsed={collapsed}
+                   onCollapse={onToggleCollapse}
+                   onOptionSelected={(opt)=>newMessage(opt.text)}
+               />
            </CenteredComponentX>
         </CenteredComponentY>
     );

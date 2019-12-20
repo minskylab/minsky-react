@@ -1,9 +1,11 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import styled from "styled-components";
 import {chatBotAvatar} from "./ChatBotAvatar";
 import Separator from "./Separator";
 
 import MessageInput from "./MessageInput";
+import collapseIcon from "../icons/chevron-down-outline.svg";
+
 
 const Base = styled.div`
   background-color: white;
@@ -84,21 +86,35 @@ const Body = styled.div`
   //width: 100%;
   margin-top: auto;
   //margin-bottom: auto;
-  overflow: scroll;
+  overflow-y: scroll;
   position: relative;
+  overflow-x: hidden;
+`;
+
+const BotOptions = styled.div`
+
+`;
+
+const Option = styled.div`
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const Board = (props) => {
     const bodyRef = useRef();
+    // const setPointRef = useRef();
 
     const onNewMessage = (message) => {
-        if (props) {
+        if (props.onNewMessage) {
             props.onNewMessage(message);
         }
-        // console.log(bodyRef.current);
-        // console.log(bodyRef.current.offsetTop);
-        // bodyRef.current.scrollTop = bodyRef.current.offsetTop;
-        bodyRef.current.scrollIntoView({behavior: "smooth"});
+    };
+
+    const onToggleCollapse = () => {
+        if (props.onCollapse) {
+            props.onCollapse();
+        }
     };
 
     return (
@@ -114,14 +130,18 @@ const Board = (props) => {
                         <BotTagLine>Bot to help to understand how works minsky</BotTagLine>
                     </SecondLine>
                 </BotDetails>
+                <BotOptions>
+                    <Option onClick={onToggleCollapse}>
+                        <img src={collapseIcon} width={"auto"} height={"24"} style={{"vertical-align": "middle"}}/>
+                    </Option>
+                </BotOptions>
             </Header>
             <Separator/>
-            <Body>
-                {props.messages}
-                <div style={{ float:"left", clear: "both" }} ref={bodyRef}/>
+            <Body ref={bodyRef} collapsed={props.collapsed}>
+                {props.content}
             </Body>
             <Separator/>
-            <MessageInput onEnter={onNewMessage}/>
+            <MessageInput onEnter={onNewMessage} blocked={props.inputBlocked}/>
         </Base>
     );
 };

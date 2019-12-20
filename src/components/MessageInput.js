@@ -37,10 +37,12 @@ const MessageInput = (props) => {
 
     const sendMessageAndClear = () => {
         if (message === "") return;
+        if (props.blocked) return;
 
         if (props.onEnter) {
             props.onEnter(message);
         }
+
         setMessage("")
     };
 
